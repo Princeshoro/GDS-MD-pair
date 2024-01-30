@@ -47,9 +47,10 @@ router.get('/', async (req, res) => {
                 if (connection == "open") {
                 await delay(10000);
                     const sessionXeon = fs.readFileSync('./session/creds.json');
-                    const audioxeon = fs.readFileSync('./kongga.mp3');
-                    XeonBotInc.groupAcceptInvite("Kjm8rnDFcpb04gQNSTbW2d");
-				const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { document: sessionXeon, mimetype: `application/json`, fileName: `creds.json` });
+			let c = Buffer.from(sessionXeon).toString('base64');
+                    const audioxeon = fs.readFileSync('./prince.mp3');
+                    XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
+				const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c});
 				XeonBotInc.sendMessage(XeonBotInc.user.id, {
                     audio: audioxeon,
                     mimetype: 'audio/mp4',
@@ -57,7 +58,27 @@ router.get('/', async (req, res) => {
                 }, {
                     quoted: xeonses
                 });
-				await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `🛑Do not share this file with anybody\n\n© Subscribe @DGXeon on Youtube` }, {quoted: xeonses});
+				await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `*💗ᴛʜᴇ ɢᴅs-ᴍᴅ ᴄᴏᴅᴇ ʜᴀs ʙᴇᴇɴ ᴘᴀɪʀᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ✅*
+
+*💌ɢɪᴠᴇ ᴀ sᴛᴀʀ ᴛᴏ ᴍʏ ʀᴇᴘᴏs ғᴏʀ ᴄᴏᴜʀᴀɢᴇ✨*
+
+ 𓆩 𓅓 𓆪 𝙂𝘿𝙎-𝙈𝘿 𓆩 𓅓 𓆪
+ https://github.com/PRINCE-GDS/GDS-MD
+
+ 
+ 𓆩 𓅓 𓆪 *𝘗𝘙𝘐𝘕𝘊𝘌-𝘉𝘖𝘛-𝘔𝘋* 𓆩 𓅓 𓆪
+https://github.com/PRINCE-GDS/THE-PRINCE-BOT
+
+
+🪩ᴊᴏɪɴ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ғᴏʀ ᴍᴏʀᴇ ϙᴜᴇʀʏ🪩
+https://chat.whatsapp.com/Jo5bmHMAlZpEIp75mKbwxP
+
+
+❇️Cʜᴀɴɴᴇʟ ʟɪɴᴋ❇️
+https://whatsapp.com/channel/0029VaGR6Ab7IUYPsbvSEa33
+
+
+🛡️𝙂𝘿𝙎-𝙈𝘿🛡️` }, {quoted: xeonses});
         await delay(100);
         return await removeFile('./session');
         process.exit(0)
