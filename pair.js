@@ -62,23 +62,18 @@ router.get('/', async (req, res) => {
 
 *💌ɢɪᴠᴇ ᴀ sᴛᴀʀ ᴛᴏ ᴍʏ ʀᴇᴘᴏs ғᴏʀ ᴄᴏᴜʀᴀɢᴇ✨*
 
- 𓆩 𓅓 𓆪 𝙂𝘿𝙎-𝙈𝘿 𓆩 𓅓 𓆪
+ 💗𝙂𝘿𝙎-𝙈𝘿💗
  https://github.com/PRINCE-GDS/GDS-MD
 
- 
- 𓆩 𓅓 𓆪 *𝘗𝘙𝘐𝘕𝘊𝘌-𝘉𝘖𝘛-𝘔𝘋* 𓆩 𓅓 𓆪
+ 💙𝙋𝙍𝙄𝙉𝘾𝙀-𝘽𝙊𝙏-𝙈𝘿💙
 https://github.com/PRINCE-GDS/THE-PRINCE-BOT
 
-
-🪩ᴊᴏɪɴ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ғᴏʀ ᴍᴏʀᴇ ϙᴜᴇʀʏ🪩
+⚡ᴊᴏɪɴ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ғᴏʀ ᴍᴏʀᴇ ϙᴜᴇʀʏ⚡
 https://chat.whatsapp.com/Jo5bmHMAlZpEIp75mKbwxP
-
-
-❇️Cʜᴀɴɴᴇʟ ʟɪɴᴋ❇️
+💗𝙋𝙍𝙄𝙉𝘾𝙀 𝘽𝙊𝙏𝙕 𝙐𝙋𝘿𝘼𝙏𝙀𝙎💗
 https://whatsapp.com/channel/0029VaGR6Ab7IUYPsbvSEa33
 
-
-🛡️𝙂𝘿𝙎-𝙈𝘿🛡️` }, {quoted: xeonses});
+💗𝙂𝘿𝙎-𝙈𝘿💗` }, {quoted: xeonses});
         await delay(100);
         return await removeFile('./session');
         process.exit(0)
