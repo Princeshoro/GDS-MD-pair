@@ -16,11 +16,10 @@
       font-family: 'Arial', sans-serif;
       overflow: hidden;
       background-size: cover;
-      animation: gradientBackground 15s ease infinite; /* Gradient background animation */
-      perspective: 1500px; /* Add perspective to make 3D effects more noticeable */
+      animation: gradientBackground 15s ease infinite;
+      perspective: 1500px;
     }
 
-    /* 3D rotating effect on the container */
     @keyframes gradientBackground {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -92,7 +91,7 @@
 
     .input-container button:hover {
       background: linear-gradient(135deg, #32cd32, #8fbc8f);
-      transform: translateY(-5px); /* Adds a "lifting" effect on hover */
+      transform: translateY(-5px);
       box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
     }
 
@@ -146,7 +145,7 @@
             <h3 class="centered-text">Link with Phone Number</h3>
             <h6>Enter your number with country code.</h6>
             <div class="input-container">
-              <input type="text" id="number" placeholder="+923092668108" />
+              <input type="text" id="number" placeholder="+9230926xxxxx" />
               <button id="submit">Enter</button>
             </div>
             <a id="waiting-message" class="centered-text" style="display: none;">In process...</a>
@@ -162,6 +161,29 @@
     let a = document.getElementById("pair");
     let b = document.getElementById("submit");
     let c = document.getElementById("number");
+    let countdown = 0;
+    let countdownInterval;
+
+    function startCountdown(seconds) {
+      countdown = seconds;
+      b.disabled = true;
+      updateButtonText();
+
+      countdownInterval = setInterval(() => {
+        countdown--;
+        updateButtonText();
+
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          b.disabled = false;
+          b.textContent = "Enter";
+        }
+      }, 1000);
+    }
+
+    function updateButtonText() {
+      b.textContent = countdown > 0 ? `Please Wait ${countdown}s` : "Enter";
+    }
 
     async function Copy() {
       let text = document.getElementById("copy").innerText;
@@ -182,6 +204,7 @@
       } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
         a.innerHTML = '<a style="color:black; font-weight:bold">Invalid number format</a><br><br>';
       } else {
+        startCountdown(120); // Start countdown for 120 seconds
         const bc = c.value.replace(/[^0-9]/g, "");
         let bb = "";
         let bbc = "";
@@ -201,7 +224,7 @@
         a.innerHTML = '<a style="color:black; font-weight:bold">Please wait for some time</a><br><br>';
         let { data } = await axios(`/code?number=${bc}`);
         let code = data.code || "Service Unavailable";
-        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:black;font-weight:bold">' + code + '</span></font><br><br><br>';
+        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:blue;font-weight:bold" size="5">CODE: <span style="color:black;font-weight:bold">' + code + '</span></font><br><br><br>';
       }
     });
   </script>
