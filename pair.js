@@ -22,23 +22,15 @@ router.get('/', async (req, res) => {
         } = await useMultiFileAuthState(`./session`)
      try {
             let XeonBotInc = makeWASocket({
-                version: [2, 3000, 1015901307],
-        printQRInTerminal: false,
-        logger: pino({
-          level: 'silent',
-        }),
-        browser: Browsers.ubuntu("Chrome"),
-        auth: {
-          creds: state.creds,
-          keys: makeCacheableSignalKeyStore(
-            state.keys,
-            pino().child({
-              level: 'fatal',
-              stream: 'store',
-            })
-          ),
-        },
-      })
+                auth: {
+                    creds: state.creds,
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
+                },
+                printQRInTerminal: false,
+                logger: pino({level: "fatal"}).child({level: "fatal"}),
+                browser: Browsers.ubuntu("Chrome"),
+             });
+	     
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
                         num = num.replace(/[^0-9]/g,'');
