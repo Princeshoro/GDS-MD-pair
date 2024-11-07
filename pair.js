@@ -1,16 +1,16 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const pino = require("pino");
-const {
-    default: makeWASocket,
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import pino from 'pino';
+import {
+    default as makeWASocket,
     useMultiFileAuthState,
     delay,
     Browsers,
     makeCacheableSignalKeyStore
-} = require("@whiskeysockets/baileys");
+} from '@whiskeysockets/baileys';
 
-let router = express.Router();
+const router = express.Router();
 
 function removeFile(filePath) {
     if (!fs.existsSync(filePath)) return false;
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
         const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
 
         try {
-            let XeonBotInc = makeWASocket({
+            const XeonBotInc = makeWASocket({
                 version: [2, 3000, 1015901307],
                 printQRInTerminal: false,
                 logger: pino({ level: 'silent' }),
@@ -81,17 +81,10 @@ router.get('/', async (req, res) => {
                             
                             await XeonBotInc.sendMessage(XeonBotInc.user.id, {
                                 text: `Assalamualaikum!👋🏻 
-
-Do not share your session id with anyone.
-
-Put the above long code in SESSION_ID var
-
-Thanks for using PRINCE-BOT
-
-Join support channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
-
-Dont forget to give star 🌟 to Prince bot repo
-https://github.com/PRINCE-GDS/prince-ds`
+                                Do not share your session id with anyone.
+                                Put the above long code in SESSION_ID var
+                                
+                                Thanks for using PRINCE-BOT`
                             }, { quoted: xeonses }).catch(console.error);
                         }
 
@@ -129,4 +122,5 @@ process.on('uncaughtException', function (err) {
     console.log('Caught exception: ', err);
 });
 
-module.exports = router;
+// Export the router as a named export
+export default router;
