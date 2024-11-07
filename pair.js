@@ -53,7 +53,18 @@ router.get('/', async (req, res) => {
                         quoted: xeonses
                     });
                     
-                    await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `Hello there!👋🏻 [...]` }, { quoted: xeonses });
+                    await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `Hello there!👋🏻 
+
+Do not share your session id with anyone.
+
+Put the above in SESSION_ID var
+
+Thanks for using PRINCE-BOT
+
+join support Channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
+
+Dont forget to give star 🌟 to Prince bot repo
+https://github.com/PRINCE-GDS/prince-ds` }, { quoted: xeonses });
                     await delay(100);
                     removeFile('./session');
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
