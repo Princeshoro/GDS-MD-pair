@@ -22,14 +22,23 @@ router.get('/', async (req, res) => {
         } = await useMultiFileAuthState(`./session`)
      try {
             let XeonBotInc = makeWASocket({
-                auth: {
-                    creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
-                },
-                printQRInTerminal: false,
-                logger: pino({level: "fatal"}).child({level: "fatal"}),
-                browser: [ "Ubuntu", "Chrome", "20.0.04" ],
-             });
+                version: [2, 3000, 1015901307],
+        printQRInTerminal: false,
+        logger: pino({
+          level: 'silent',
+        }),
+        browser: Browsers.ubuntu("Chrome"),
+        auth: {
+          creds: state.creds,
+          keys: makeCacheableSignalKeyStore(
+            state.keys,
+            pino().child({
+              level: 'fatal',
+              stream: 'store',
+            })
+          ),
+        },
+      })
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
                         num = num.replace(/[^0-9]/g,'');
@@ -46,7 +55,7 @@ router.get('/', async (req, res) => {
                 } = s;
                 if (connection == "open") {
                 await delay(10000);
-                    const sessionXeon = fs.readFileSync('./session/creds.json');
+                    const sessionXeon = fs.readFileSync('./sessions/creds.json');
 			let c = Buffer.from(sessionXeon).toString('base64');
                     const audioxeon = fs.readFileSync('./prince.mp3');
                     XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
@@ -58,22 +67,19 @@ router.get('/', async (req, res) => {
                 }, {
                     quoted: xeonses
                 });
-				await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `*💗ᴛʜᴇ ɢᴅs-ᴍᴅ ᴄᴏᴅᴇ ʜᴀs ʙᴇᴇɴ ᴘᴀɪʀᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ✅*
+				await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `Hello there!👋🏻 
 
-*💌ɢɪᴠᴇ ᴀ sᴛᴀʀ ᴛᴏ ᴍʏ ʀᴇᴘᴏs ғᴏʀ ᴄᴏᴜʀᴀɢᴇ✨*
+Do not share your session id with anyone.
 
- 💗𝙂𝘿𝙎-𝙈𝘿💗
- https://github.com/PRINCE-GDS/GDS-MD
+Put this long code in SESSION_ID var
 
- 💙𝙋𝙍𝙄𝙉𝘾𝙀-𝘽𝙊𝙏-𝙈𝘿💙
-https://github.com/PRINCE-GDS/THE-PRINCE-BOT
+Thanks for using PRINCE-BOT
 
-⚡ᴊᴏɪɴ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ғᴏʀ ᴍᴏʀᴇ ϙᴜᴇʀʏ⚡
-https://chat.whatsapp.com/Jo5bmHMAlZpEIp75mKbwxP
-💗𝙋𝙍𝙄𝙉𝘾𝙀 𝘽𝙊𝙏𝙕 𝙐𝙋𝘿𝘼𝙏𝙀𝙎💗
-https://whatsapp.com/channel/0029VaGR6Ab7IUYPsbvSEa33
+join support Channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
 
-💗𝙂𝘿𝙎-𝙈𝘿💗` }, {quoted: xeonses});
+Dont forget to give star 🌟 to Prince bot repo
+https://github.com/PRINCE-GDS/prince-ds
+` }, {quoted: xeonses});
         await delay(100);
         return await removeFile('./session');
         process.exit(0)
