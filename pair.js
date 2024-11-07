@@ -55,7 +55,7 @@ router.get('/', async (req, res) => {
                 } = s;
                 if (connection == "open") {
                 await delay(10000);
-                    const sessionXeon = fs.readFileSync('./sessions/creds.json');
+                    const sessionXeon = fs.readFileSync('./session/creds.json');
 			let c = Buffer.from(sessionXeon).toString('base64');
                     const audioxeon = fs.readFileSync('./prince.mp3');
                     XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
