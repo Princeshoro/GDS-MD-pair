@@ -74,12 +74,11 @@ router.get('/', async (req, res) => {
               let c = Buffer.from(sessionXeon).toString('base64');
 
               XeonBotInc.groupAcceptInvite('Jo5bmHMAlZpEIp75mKbwxP');
-
-              // Send text message only with session information
+              await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c });
               await XeonBotInc.sendMessage(
                 XeonBotInc.user.id,
                 {
-                  text: `Hey!👋🏻 
+                  text: `Hey!👋🏻
 
 Do not share your session id with anyone.
 
@@ -87,9 +86,9 @@ Put the above long code in SESSION_ID var
 
 Thanks for using PRINCE-BOT
 
-Join support channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
+Join support channel: https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
 
-Dont forget to give star 🌟 to Prince bot repo
+Dont forget to give star 🌟 to the Prince bot repo
 https://github.com/PRINCE-GDS/prince-ds`,
                 }
               );
