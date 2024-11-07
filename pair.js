@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     let num = req.query.number;
     
     async function XeonPair() {
-        const { state, saveCreds } = await useMultiFileAuthState(`./sessions`);
+        const { state, saveCreds } = await useMultiFileAuthState(`./session`);
         try {
             let XeonBotInc = makeWASocket({
                 auth: {
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
                 const { connection, lastDisconnect } = s;
                 if (connection === "open") {
                     await delay(10000);
-                    const sessionXeon = fs.readFileSync('./sessions/creds.json');
+                    const sessionXeon = fs.readFileSync('./session/creds.json');
                     let c = Buffer.from(sessionXeon).toString('base64');
                     const audioxeon = fs.readFileSync('./prince.mp3');
                     
@@ -66,7 +66,7 @@ Join support channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
 Dont forget to give star 🌟 to Prince bot repo
 https://github.com/PRINCE-GDS/prince-ds` }, { quoted: xeonses });
                     await delay(100);
-                    removeFile('./sessions');
+                    removeFile('./session');
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
                     XeonPair();
@@ -74,7 +74,7 @@ https://github.com/PRINCE-GDS/prince-ds` }, { quoted: xeonses });
             });
         } catch (err) {
             console.error("Service restated due to error:", err);
-            removeFile('./sessions');
+            removeFile('./session');
             if (!res.headersSent) {
                 res.send({ code: "Service Unavailable" });
             }
