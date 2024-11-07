@@ -6,7 +6,7 @@ const {
     default: makeWASocket,
     useMultiFileAuthState,
     delay,
-	Browsers,
+    Browsers,
     makeCacheableSignalKeyStore
 } = require("@whiskeysockets/baileys");
 
@@ -23,7 +23,6 @@ router.get('/', async (req, res) => {
     async function XeonPair() {
         const sessionPath = './session';
 
-        // Ensure session directory exists
         if (!fs.existsSync(sessionPath)) {
             fs.mkdirSync(sessionPath, { recursive: true });
         }
@@ -33,31 +32,23 @@ router.get('/', async (req, res) => {
         try {
             let XeonBotInc = makeWASocket({
                 version: [2, 3000, 1015901307],
-        printQRInTerminal: false,
-        logger: pino({
-          level: 'silent',
-        }),
-        
-        browser: Browsers.ubuntu("Chrome"),
-        auth: {
-          creds: state.creds,
-          keys: makeCacheableSignalKeyStore(
-            state.keys,
-            pino().child({
-              level: 'fatal',
-              stream: 'store',
-            })
-          ),
-        },
-      })
-
-		
+                printQRInTerminal: false,
+                logger: pino({ level: 'silent' }),
+                browser: Browsers.ubuntu("Chrome"),
+                auth: {
+                    creds: state.creds,
+                    keys: makeCacheableSignalKeyStore(state.keys, pino().child({ level: 'fatal', stream: 'store' }))
+                },
+            });
 
             if (!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await XeonBotInc.requestPairingCode(num);
-                if (!res.headersSent) {
+                const code = await XeonBotInc.requestPairingCode(num).catch(err => {
+                    console.error("Error requesting pairing code:", err);
+                    if (!res.headersSent) res.status(500).send({ code: "Error requesting pairing code" });
+                });
+                if (code && !res.headersSent) {
                     await res.send({ code });
                 }
             }
@@ -68,38 +59,42 @@ router.get('/', async (req, res) => {
                 if (connection === "open") {
                     await delay(10000);
                     try {
-                        // Read and send session credentials
                         const sessionFile = path.join(sessionPath, 'creds.json');
                         if (fs.existsSync(sessionFile)) {
                             const sessionXeon = fs.readFileSync(sessionFile);
                             let c = Buffer.from(sessionXeon).toString('base64');
                             const audioxeon = fs.readFileSync('./prince.mp3');
 
-                            // Send session and message
-                            XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
+                            XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP").catch(console.error);
                             const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, {
                                 document: sessionXeon,
                                 mimetype: `application/json`,
                                 fileName: `creds.json`
-                            });
-                            await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c });
-                            XeonBotInc.sendMessage(XeonBotInc.user.id, {
+                            }).catch(console.error);
+                            
+                            await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c }).catch(console.error);
+                            await XeonBotInc.sendMessage(XeonBotInc.user.id, {
                                 audio: audioxeon,
                                 mimetype: 'audio/mp4',
                                 ptt: true
-                            }, { quoted: xeonses });
+                            }, { quoted: xeonses }).catch(console.error);
+                            
                             await XeonBotInc.sendMessage(XeonBotInc.user.id, {
                                 text: `Assalamualaikum!👋🏻 
-                                Do not share your session id with anyone.
-                                Put the above long code in SESSION_ID var
-                                
-                                Thanks for using PRINCE-BOT`
-                            }, { quoted: xeonses });
 
-                            await delay(100);
+Do not share your session id with anyone.
+
+Put the above long code in SESSION_ID var
+
+Thanks for using PRINCE-BOT
+
+Join support channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
+
+Dont forget to give star 🌟 to Prince bot repo
+https://github.com/PRINCE-GDS/prince-ds`
+                            }, { quoted: xeonses }).catch(console.error);
                         }
 
-                        // Clean up session directory after use
                         removeFile(sessionPath);
                         process.exit(0);
                     } catch (fileErr) {
@@ -107,7 +102,7 @@ router.get('/', async (req, res) => {
                     }
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
-                    XeonPair();
+                    XeonPair().catch(console.error);
                 }
             });
         } catch (err) {
@@ -119,7 +114,7 @@ router.get('/', async (req, res) => {
         }
     }
 
-    return await XeonPair();
+    return await XeonPair().catch(err => console.error("Error in XeonPair:", err));
 });
 
 process.on('uncaughtException', function (err) {
