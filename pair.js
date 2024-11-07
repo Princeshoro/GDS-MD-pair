@@ -23,6 +23,9 @@ function removeFile(filePath) {
   }
 }
 
+let retryCount = 0;
+const maxRetries = 5;
+
 router.get('/', async (req, res) => {
   let num = req.query.number;
 
@@ -66,6 +69,8 @@ router.get('/', async (req, res) => {
       XeonBotInc.ev.on('connection.update', async (s) => {
         const { connection, lastDisconnect } = s;
         if (connection === 'open') {
+          console.log('Connection opened');
+          retryCount = 0; // Reset retry count on successful connection
           await delay(10000);
           try {
             const sessionFile = path.join(sessionPath, 'creds.json');
@@ -78,9 +83,9 @@ router.get('/', async (req, res) => {
               await XeonBotInc.sendMessage(
                 XeonBotInc.user.id,
                 {
-                  text: `Hey!👋🏻
+                  text: `Assalamualaikum! 👋
 
-Do not share your session id with anyone.
+Do not share your session ID with anyone.
 
 Put the above long code in SESSION_ID var
 
@@ -88,7 +93,7 @@ Thanks for using PRINCE-BOT
 
 Join support channel: https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
 
-Dont forget to give star 🌟 to the Prince bot repo
+Don’t forget to give a star ⭐ to the Prince bot repo:
 https://github.com/PRINCE-GDS/prince-ds`,
                 }
               );
@@ -106,8 +111,15 @@ https://github.com/PRINCE-GDS/prince-ds`,
           lastDisconnect.error &&
           lastDisconnect.error.output.statusCode !== 401
         ) {
-          await delay(10000);
-          XeonPair();
+          if (retryCount < maxRetries) {
+            retryCount++;
+            console.log(`Connection closed. Retrying... Attempt ${retryCount}`);
+            await delay(5000 * retryCount); // Exponential backoff delay
+            XeonPair(); // Retry the pairing function
+          } else {
+            console.error('Max retries reached. Exiting.');
+            process.exit(1);
+          }
         }
       });
     } catch (err) {
