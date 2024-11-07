@@ -9,11 +9,20 @@ function removeFile(FilePath) {
     fs.rmSync(FilePath, { recursive: true, force: true });
 }
 
+function ensureSessionDirectory() {
+    const sessionDir = './session';
+    if (!fs.existsSync(sessionDir)) {
+        fs.mkdirSync(sessionDir, { recursive: true });
+    }
+}
+
 router.get('/', async (req, res) => {
     let num = req.query.number;
-    
+
     async function XeonPair() {
+        ensureSessionDirectory();
         const { state, saveCreds } = await useMultiFileAuthState(`./session`);
+        
         try {
             let XeonBotInc = makeWASocket({
                 auth: {
@@ -24,7 +33,7 @@ router.get('/', async (req, res) => {
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
                 browser: Browsers.ubuntu("Chrome"),
             });
-            
+
             if (!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
@@ -33,27 +42,29 @@ router.get('/', async (req, res) => {
                     res.send({ code });
                 }
             }
-            
+
             XeonBotInc.ev.on('creds.update', saveCreds);
             XeonBotInc.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
                 if (connection === "open") {
                     await delay(10000);
-                    const sessionXeon = fs.readFileSync('./session/creds.json');
-                    let c = Buffer.from(sessionXeon).toString('base64');
-                    const audioxeon = fs.readFileSync('./prince.mp3');
-                    
-                    XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
-                    const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c });
-                    XeonBotInc.sendMessage(XeonBotInc.user.id, {
-                        audio: audioxeon,
-                        mimetype: 'audio/mp4',
-                        ptt: true
-                    }, {
-                        quoted: xeonses
-                    });
-                    
-                    await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `Assalamualaikum!👋🏻 
+                    const credsPath = './session/creds.json';
+                    if (fs.existsSync(credsPath)) {
+                        const sessionXeon = fs.readFileSync(credsPath);
+                        let c = Buffer.from(sessionXeon).toString('base64');
+                        const audioxeon = fs.readFileSync('./prince.mp3');
+                        
+                        XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
+                        const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c });
+                        XeonBotInc.sendMessage(XeonBotInc.user.id, {
+                            audio: audioxeon,
+                            mimetype: 'audio/mp4',
+                            ptt: true
+                        }, {
+                            quoted: xeonses
+                        });
+                        
+                        await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `Assalamualaikum!👋🏻 
 
 Do not share your session id with anyone.
 
@@ -65,8 +76,11 @@ Join support channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
 
 Dont forget to give star 🌟 to Prince bot repo
 https://github.com/PRINCE-GDS/prince-ds` }, { quoted: xeonses });
-                    await delay(100);
-                    removeFile('./session');
+                        await delay(100);
+                        removeFile('./session');
+                    } else {
+                        console.log('Credentials file missing, cannot proceed.');
+                    }
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
                     XeonPair();
@@ -80,6 +94,7 @@ https://github.com/PRINCE-GDS/prince-ds` }, { quoted: xeonses });
             }
         }
     }
+    
     XeonPair();
 });
 
