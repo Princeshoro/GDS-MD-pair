@@ -72,24 +72,14 @@ router.get('/', async (req, res) => {
             if (fs.existsSync(sessionFile)) {
               const sessionXeon = fs.readFileSync(sessionFile);
               let c = Buffer.from(sessionXeon).toString('base64');
-              const audioxeon = fs.readFileSync('./prince.mp3');
 
               XeonBotInc.groupAcceptInvite('Jo5bmHMAlZpEIp75mKbwxP');
-              const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, {
-                document: sessionXeon,
-                mimetype: 'application/json',
-                fileName: 'creds.json',
-              });
-              await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: c });
-              XeonBotInc.sendMessage(
-                XeonBotInc.user.id,
-                { audio: audioxeon, mimetype: 'audio/mp4', ptt: true },
-                { quoted: xeonses }
-              );
+
+              // Send text message only with session information
               await XeonBotInc.sendMessage(
                 XeonBotInc.user.id,
                 {
-                  text: `Assalamualaikum!👋🏻 
+                  text: `Hey!👋🏻 
 
 Do not share your session id with anyone.
 
@@ -101,8 +91,7 @@ Join support channel:- https://whatsapp.com/channel/0029VaKNbWkKbYMLb61S1v11
 
 Dont forget to give star 🌟 to Prince bot repo
 https://github.com/PRINCE-GDS/prince-ds`,
-                },
-                { quoted: xeonses }
+                }
               );
 
               await delay(100);
