@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
                     const sessionXeon = fs.readFileSync('./session/creds.json');
 			let c = Buffer.from(sessionXeon).toString('base64');
                     XeonBotInc.groupAcceptInvite("Jo5bmHMAlZpEIp75mKbwxP");
-				const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, {text: c}
+				const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, {text: c});
 				await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `Hey!👋🏻
 
 Do not share your session ID with anyone.
