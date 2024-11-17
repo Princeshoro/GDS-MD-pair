@@ -183,13 +183,15 @@
     let countdown = 0;
     let countdownInterval;
 
+    // Start the countdown
     function startCountdown(seconds) {
       countdown = seconds;
       b.disabled = true;
-      updateButtonText();
+      updateButtonText(); // Update button text when countdown starts
 
       countdownInterval = setInterval(() => {
         countdown--;
+        console.log(`Countdown: ${countdown}s`); // Log countdown value for debugging
         updateButtonText();
 
         if (countdown <= 0) {
@@ -200,20 +202,9 @@
       }, 1000);
     }
 
+    // Update button text to show countdown
     function updateButtonText() {
       b.textContent = countdown > 0 ? `Please Wait ${countdown}s` : "Enter";
-    }
-
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:blue; font-weight:bold";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:black; font-weight:bold";
-      }, 500);
     }
 
     b.addEventListener("click", async (e) => {
@@ -243,4 +234,9 @@
         a.innerHTML = '<a style="color:black; font-weight:bold">Please wait for some time</a><br><br>';
         let { data } = await axios(`/code?number=${bc}`);
         let code = data.code || "Service Unavailable";
-        a.innerHTML = '<font id="
+        a.innerHTML = `<font id="copy">CODE: ${code}</font><br><br>`;
+      }
+    });
+  </script>
+</body>
+</html>
